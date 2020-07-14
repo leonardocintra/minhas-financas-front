@@ -24,25 +24,25 @@ class CadastroUsuario extends React.Component {
               <div className="bs-component">
                 <FormGroup label="Nome: *" htmlFor="inputNome">
                   <input type="text" id="inputNome" name="nome"
-                    className="form-control"
+                    className="form-control" placeholder="Digite o nome"
                     onChange={(e) => this.setState({ nome: e.target.value })} />
                 </FormGroup>
 
                 <FormGroup label="Email: *" htmlFor="inputEmail">
                   <input type="email" id="inputEmail" name="email"
-                    className="form-control"
+                    className="form-control" placeholder="Digite o email"
                     onChange={(e) => this.setState({ email: e.target.value })} />
                 </FormGroup>
 
                 <FormGroup label="Senha: *" htmlFor="inputSenha">
                   <input type="password" id="inputSenha" name="senha"
-                    className="form-coentrol"
+                    className="form-control" placeholder="Digite a senha"
                     onChange={(e) => this.setState({ senha: e.target.value })} />
                 </FormGroup>
 
                 <FormGroup label="Repita a senha: *" htmlFor="inputRepitaSenha">
                   <input type="password" id="inputRepitaSenha" name="senha"
-                    className="form-control"
+                    className="form-control" placeholder="Digite novamente a senha"
                     onChange={(e) => this.setState({ senhaRepeticao: e.target.value })} />
                 </FormGroup>
 
