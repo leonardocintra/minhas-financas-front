@@ -8,7 +8,8 @@ class Login extends React.Component {
 
   state = {
     email: '',
-    senha: ''
+    senha: '',
+    mensagemErro: null
   }
 
   entrar = () => {
@@ -16,8 +17,10 @@ class Login extends React.Component {
       email: this.state.email,
       senha: this.state.senha
     }).then(res => {
-      console.log(res);
-    }).catch(err => console.log(err.response))
+      this.props.history.push('/home');
+    }).catch(err => {
+      this.setState({ mensagemErro: err.response.data })
+    })
   }
 
   prepareCadastrar = () => {
@@ -32,6 +35,9 @@ class Login extends React.Component {
         }} >
           <div className="bs-docs-section">
             <Card title="Login">
+              <div className="row">
+                <span>{this.state.mensagemErro}</span>
+              </div>
               <div className="row">
                 <div className="col-lg-12">
                   <div className="bs-component">
