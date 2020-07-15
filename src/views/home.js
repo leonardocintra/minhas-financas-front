@@ -1,14 +1,27 @@
 import React from 'react';
-import Axios from 'axios';
+
+import UsuarioService from '../app/service/usuarioService';
+import LocalStorageService from '../app/localStorageService';
 
 class Home extends React.Component {
 
   state = {
-    saldo: 0
+    saldo: 0,
+    nomeUsuario: ''
+  }
+
+  constructor() {
+    super();
+    this.usuarioService = new UsuarioService();
   }
 
   componentDidMount() {
-    Axios.get('http://localhost:8080/api/usuarios/5/saldo')
+
+    const usuarioLogado = LocalStorageService.getItem('_usuario_logado');
+    this.setState({ nomeUsuario: usuarioLogado.nome })
+
+    this.usuarioService
+      .obterSaldoPorUsuario(usuarioLogado.id)
       .then(res => {
         this.setState({ saldo: res.data });
       })
@@ -18,7 +31,7 @@ class Home extends React.Component {
   render() {
     return (
       <div className="jumbotron">
-        <h1 className="display-3">Bem vindo!</h1>
+        <h1 className="display-3">Bem vindo!</h1> <h3>{this.state.nomeUsuario}</h3>
         <p className="lead">Esse é seu sistema de finanças.</p>
         <p className="lead">Seu saldo para o mês atual é de R$ {this.state.saldo}</p>
         <hr className="my-4" />
