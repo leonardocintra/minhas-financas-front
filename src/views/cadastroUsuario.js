@@ -3,6 +3,9 @@ import { withRouter } from 'react-router-dom';
 
 import Card from '../components/card';
 import FormGroup from '../components/form-group';
+import { mensagemSucesso, mensagemErro } from '../components/toastr'
+
+import UsuarioService from '../app/service/usuarioService';
 
 class CadastroUsuario extends React.Component {
 
@@ -13,8 +16,65 @@ class CadastroUsuario extends React.Component {
     senhaRepeticao: ''
   }
 
+  constructor() {
+    super();
+    this.usuarioService = new UsuarioService();
+  }
+
+  validar() {
+    const messages = [];
+
+    if (!this.state.nome) {
+      messages.push('O campo nome é obrigatório');
+    }
+
+    if (!this.state.email) {
+      messages.push('O campo email é obrigatório');
+    } else if (!this.state.email.match(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
+      messages.push('O campo email não é valido!');
+    }
+
+    if (!this.state.senha) {
+      messages.push('O campo senha é obrigatório');
+    }
+
+    if (!this.state.senhaRepeticao) {
+      messages.push('O campo senha repetição é obrigatório');
+    }
+
+    if (this.state.senha != this.state.senhaRepeticao) {
+      messages.push('As senhas não batem. Verifique');
+    }
+
+    return messages;
+  }
+
   cadastrar = () => {
-    console.log('Salvar')
+
+    const messages = this.validar();
+
+    if (messages && messages.length > 0) {
+      messages.forEach((msg, index) => {
+        mensagemErro(msg);
+      })
+
+      return false;
+    }
+
+    const usuario = {
+      nome: this.state.nome,
+      email: this.state.email,
+      senha: this.state.senha
+    }
+
+    this.usuarioService.salvar(usuario)
+      .then(res => {
+        mensagemSucesso('Usuário cadastrado com sucesso! Faça o login para acessar o sistema.');
+        this.props.history.push('/login');
+      })
+      .catch(err => {
+        mensagemErro(err.response.data);
+      })
   }
 
   cancelar = () => {
