@@ -42,7 +42,7 @@ class CadastroUsuario extends React.Component {
       messages.push('O campo senha repetição é obrigatório');
     }
 
-    if (this.state.senha != this.state.senhaRepeticao) {
+    if (this.state.senha !== this.state.senhaRepeticao) {
       messages.push('As senhas não batem. Verifique');
     }
 
