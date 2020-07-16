@@ -3,10 +3,13 @@ import React from 'react';
 export default props => {
 
   const rows = props.lancamentos.map(lancamento => {
+
+    let valorFormatado = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL'}).format(lancamento.valor);
+
     return (
       <tr key={lancamento.id} >
         <td>{lancamento.descricao}</td>
-        <td>{lancamento.valor}</td>
+        <td>{valorFormatado}</td>
         <td>{lancamento.tipo}</td>
         <td>{lancamento.mes}</td>
         <td>{lancamento.status}</td>
