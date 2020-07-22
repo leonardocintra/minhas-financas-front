@@ -6,7 +6,11 @@ export default class LancamentoService extends ApiService {
     }
 
     obterListaTiposLancamentos() {
-        return [{ id: 1030, descricao: 'Salário', valor: 5000, mes: 1, tipo: 'RECEITA', status: 'Efetivado' }]
+        return [
+            { label: 'Selecione ...', value: '' },
+            { label: 'Receita', value: 'RECEITA' },
+            { label: 'Despesa', value: 'DESPESA' },
+        ]
     }
 
     obterListaMeses() {
@@ -52,5 +56,9 @@ export default class LancamentoService extends ApiService {
         }
 
         return this.get(params);
+    }
+
+    deletar(id) {
+        return this.delete(`/${id}`)
     }
 }

@@ -11,6 +11,9 @@ import LancamentoService from '../../app/service/lancamentoService';
 
 import * as messages from '../../components/toastr';
 
+import { Dialog } from 'primereact/dialog';
+import { Button } from 'primereact/button';
+
 class ConsultaLancamento extends React.Component {
 
   constructor() {
@@ -19,10 +22,12 @@ class ConsultaLancamento extends React.Component {
   }
 
   state = {
-    ano: '',
+    ano: new Date().getFullYear(),
     mes: '',
     tipo: '',
     descricao: '',
+    showConfirmDialog: false,
+    lancamentoDeletar: {},
     lancamentos: []
   }
 
@@ -52,7 +57,42 @@ class ConsultaLancamento extends React.Component {
       })
   }
 
+  editar = (id) => {
+    console.log(id);
+  }
+
+  abrirConfirmacaoDelete = (lancamento) => {
+    this.setState({ showConfirmDialog: true, lancamentoDeletar: lancamento });
+  }
+
+  cancelarDelecao = () => {
+    this.setState({ showConfirmDialog: false, lancamentoDeletar: {} });
+  }
+
+  deletar = () => {
+    this.service.deletar(this.state.lancamentoDeletar.id)
+      .then(res => {
+        const lancamentos = this.state.lancamentos;
+        const index = lancamentos.indexOf(this.state.lancamentoDeletar);
+
+        lancamentos.splice(index, 1);
+        this.setState({ lancamentos: lancamentos, showConfirmDialog: false });
+
+        messages.mensagemSucesso('Lançamento excluido com sucesso!')
+      })
+      .catch(err => {
+        messages.mensagemErro('Ocorreu um erro ao excluir: ' + err.message);
+      })
+  }
+
   render() {
+
+    const confirmDialogFooter = (
+      <div>
+        <Button label="Sim" icon="pi pi-check" onClick={this.deletar} />
+        <Button label="Não" icon="pi pi-times" onClick={this.cancelarDelecao} />
+      </div>
+    );
 
     const tipos_lacamento = this.service.obterListaTiposLancamentos();
     const meses = this.service.obterListaMeses();
@@ -100,9 +140,20 @@ class ConsultaLancamento extends React.Component {
         <div className="row">
           <div className="col-md-12">
             <div className="bs-component">
-              <LancamentosTable lancamentos={this.state.lancamentos} />
+              <LancamentosTable lancamentos={this.state.lancamentos}
+                deleteAction={this.abrirConfirmacaoDelete}
+                editarAction={this.editar} />
             </div>
           </div>
+        </div>
+        <div>
+          <Dialog header="Confirmação delete"
+            visible={this.state.showConfirmDialog}
+            style={{ width: '50vw' }}
+            modal={true} footer={confirmDialogFooter}
+            onHide={() => this.setState({ showConfirmDialog: false })}>
+            Tem certeza que deseja excluir esse lançamento ?
+          </Dialog>
         </div>
       </Card>
     )
