@@ -50,6 +50,10 @@ class ConsultaLancamento extends React.Component {
 
     this.service.consultar(lancamentoFiltro)
       .then(res => {
+        if (res.data.length < 1) {
+          messages.mensagemAlerta("Não encontrou resultados. Reveja os filtros da pesquisa.");
+        }
+
         this.setState({ lancamentos: res.data })
       })
       .catch(err => {
@@ -58,7 +62,7 @@ class ConsultaLancamento extends React.Component {
   }
 
   editar = (id) => {
-    console.log(id);
+    this.props.history.push(`/cadastro-lancamento/${id}`);
   }
 
   abrirConfirmacaoDelete = (lancamento) => {
@@ -67,6 +71,10 @@ class ConsultaLancamento extends React.Component {
 
   cancelarDelecao = () => {
     this.setState({ showConfirmDialog: false, lancamentoDeletar: {} });
+  }
+
+  redirectToCadastroLancamento = () => {
+    this.props.history.push('/cadastro-lancamento');
   }
 
   deletar = () => {
@@ -131,7 +139,7 @@ class ConsultaLancamento extends React.Component {
               </FormGroup>
 
               <button onClick={this.buscar} type="button" className="btn btn-info">Buscar</button>
-              <button onClick={this.cancelar} type="button" className="btn btn-success">Cadastrar</button>
+              <button onClick={this.redirectToCadastroLancamento} type="button" className="btn btn-success">Cadatrar lançaento</button>
 
             </div>
           </div>
