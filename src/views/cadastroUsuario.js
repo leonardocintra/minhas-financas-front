@@ -21,50 +21,17 @@ class CadastroUsuario extends React.Component {
     this.usuarioService = new UsuarioService();
   }
 
-  validar() {
-    const messages = [];
-
-    if (!this.state.nome) {
-      messages.push('O campo nome é obrigatório');
-    }
-
-    if (!this.state.email) {
-      messages.push('O campo email é obrigatório');
-    } else if (!this.state.email.match(/^[a-z0-9.]+@[a-z0-9]+\.[a-z]/)) {
-      messages.push('O campo email não é valido!');
-    }
-
-    if (!this.state.senha) {
-      messages.push('O campo senha é obrigatório');
-    }
-
-    if (!this.state.senhaRepeticao) {
-      messages.push('O campo senha repetição é obrigatório');
-    }
-
-    if (this.state.senha !== this.state.senhaRepeticao) {
-      messages.push('As senhas não batem. Verifique');
-    }
-
-    return messages;
-  }
-
   cadastrar = () => {
 
-    const messages = this.validar();
+    const { nome, email, senha, senhaRepeticao } = this.state;
+    const usuario = { nome, email, senha, senhaRepeticao }
 
-    if (messages && messages.length > 0) {
-      messages.forEach((msg, index) => {
-        mensagemErro(msg);
-      })
-
+    try {
+      this.usuarioService.validar(usuario);
+    } catch (e) {
+      const msgs = e.mensagens;
+      msgs.forEach(msg => mensagemErro(msg));
       return false;
-    }
-
-    const usuario = {
-      nome: this.state.nome,
-      email: this.state.email,
-      senha: this.state.senha
     }
 
     this.usuarioService.salvar(usuario)
